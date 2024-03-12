@@ -53,6 +53,12 @@ const CreateObjectWithAiDialog = ({
 
     setImage(image.url);
 
+    setStatus({
+      type: "success",
+      message: "Image generated",
+    });
+    setLoading(false);
+
     return image;
   };
 
@@ -97,7 +103,7 @@ const CreateObjectWithAiDialog = ({
     return imageWithBackgroundBlob;
   };
 
-  const handleGenerateModel = async (image: Blob) => {
+  const generateModel = async (image: Blob) => {
     const generatedModel = await fal.subscribe("fal-ai/triposr", {
       input: { image_url: image },
       logs: true,
@@ -124,20 +130,27 @@ const CreateObjectWithAiDialog = ({
 
   const handleGenerate = async () => {
     setLoading(true);
+    setModelURL(null);
 
     setStatus({
       type: "loading",
       message: "Image generating...",
     });
 
-    const image = await handleImageGenerate();
+    await handleImageGenerate();
+  };
+
+  const handleGenerateModel = async () => {
+    if (!image) return;
+
+    setLoading(true);
 
     setStatus({
       type: "loading",
       message: "Background removing...",
     });
 
-    const imageWithoutBackground = await removeBackground(image.url);
+    const imageWithoutBackground = await removeBackground(image as string);
 
     setStatus({
       type: "loading",
@@ -152,7 +165,7 @@ const CreateObjectWithAiDialog = ({
     });
 
     setTimeout(async () => {
-      await handleGenerateModel(imageWithBackgroundBlob as Blob);
+      await generateModel(imageWithBackgroundBlob as Blob);
       setLoading(false);
     }, 200);
   };
@@ -205,7 +218,8 @@ const CreateObjectWithAiDialog = ({
             )}
 
             {image && (
-              <div className="w-1/2 rounded-[4px] bg-black aspect-square">
+              <div className="w-1/2 flex items-center justify-center rounded-[4px] bg-black aspect-square">
+                {!modelURL && <span className="text-xl text-white/30">?</span>}
                 {modelURL && (
                   <Canvas>
                     <OrbitControls maxDistance={1} />
@@ -255,7 +269,7 @@ const CreateObjectWithAiDialog = ({
             </div>
 
             <div className="flex items-center space-x-2">
-              {!modelURL && (
+              {!image && (
                 <button
                   disabled={loading}
                   onClick={handleGenerate}
@@ -264,25 +278,34 @@ const CreateObjectWithAiDialog = ({
                   Generate
                 </button>
               )}
-
-              {modelURL && (
+              {image && (
                 <>
                   <button
                     disabled={loading}
                     onClick={handleGenerate}
-                    className="disabled:opacity-55 disabled:cursor-not-allowed  bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                    className="bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                   >
                     Regenerate
                   </button>
-                  <Dialog.Close asChild>
+                  {!modelURL ? (
                     <button
                       disabled={loading}
-                      onClick={handleInsert}
-                      className="disabled:opacity-55 disabled:cursor-not-allowed  bg-lime-600 border-t border-lime-500 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                      onClick={handleGenerateModel}
+                      className="bg-lime-700 border-t border-lime-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                     >
-                      Insert
+                      Image to 3D
                     </button>
-                  </Dialog.Close>
+                  ) : (
+                    <Dialog.Close asChild>
+                      <button
+                        disabled={loading}
+                        onClick={handleInsert}
+                        className="disabled:opacity-55 disabled:cursor-not-allowed  bg-lime-600 border-t border-lime-500 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                      >
+                        Insert
+                      </button>
+                    </Dialog.Close>
+                  )}
                 </>
               )}
             </div>
