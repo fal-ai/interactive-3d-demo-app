@@ -129,6 +129,11 @@ export default function Home() {
     };
   }, [setActiveModelId, activeModelId]);
 
+  const handleDelete = () => {
+    setModels((models) => models.filter((model) => model.id !== activeModelId));
+    setActiveModelId(null);
+  };
+
   return (
     <main className="flex text-neutral-200 bg-black min-h-screen flex-col items-center justify-between relative w-screen h-screen">
       <header className="p-3 text-sm space-x-2 flex w-full items-start justify-end bg-gradient-to-b via-black from-black h-32 to-transparent fixed z-50 left-0 top-0">
@@ -289,6 +294,14 @@ export default function Home() {
               onClick={() => setMode("scale")}
             >
               <Icon icon="scale" size={18} />
+            </button>
+            <button
+              className={clsx(
+                "flex items-center justify-center h-6 w-6 rounded-full"
+              )}
+              onClick={handleDelete}
+            >
+              <Icon icon="trash" size={15} />
             </button>
           </div>
 
