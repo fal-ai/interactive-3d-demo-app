@@ -2,6 +2,7 @@ import React, { ReactNode, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as fal from "@fal-ai/serverless-client";
+import { motion } from "framer-motion";
 
 fal.config({ proxyUrl: "/api/proxy" });
 
@@ -52,11 +53,6 @@ const CreateObjectWithAiDialog = ({
 
     setImage(image.url);
 
-    setStatus({
-      type: "success",
-      message: "Image generated",
-    });
-
     return image;
   };
 
@@ -78,11 +74,6 @@ const CreateObjectWithAiDialog = ({
     // @ts-expect-error
     const imageWithoutBackground = removedBgImage.image;
 
-    setStatus({
-      type: "success",
-      message: "Background removed",
-    });
-
     setImage(imageWithoutBackground.url);
 
     return imageWithoutBackground.url;
@@ -102,11 +93,6 @@ const CreateObjectWithAiDialog = ({
 
     const imageWithBackground = URL.createObjectURL(imageWithBackgroundBlob);
     setImage(imageWithBackground);
-
-    setStatus({
-      type: "success",
-      message: "Flat Background added",
-    });
 
     return imageWithBackgroundBlob;
   };
@@ -233,9 +219,15 @@ const CreateObjectWithAiDialog = ({
           </div>
 
           <div className="mt-[25px] flex justify-between items-center space-x-2">
-            <div className="flex flex-col divide-y divide-neutral-600">
+            <div className="flex items-center relative">
               {status && (
-                <div className="flex justify-between text-xs">
+                <motion.div
+                  className="absolute w-56 flex items-center space-x-1 text-xs"
+                  key={status.message}
+                  initial={{ opacity: 0, bottom: -20 }}
+                  animate={{ opacity: 1, bottom: -10 }}
+                  transition={{ duration: 0.5 }}
+                >
                   <Icon
                     icon={
                       status.type === "loading"
@@ -255,7 +247,7 @@ const CreateObjectWithAiDialog = ({
                     size={16}
                   />
                   <div className="text-neutral-200">{status.message}</div>
-                </div>
+                </motion.div>
               )}
             </div>
 
