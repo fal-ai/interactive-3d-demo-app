@@ -240,18 +240,18 @@ export default function Home() {
 
       <div className="fixed bottom-10 left-10 flex flex-col space-y-2 text-xs text-neutral-600/70 pointer-events-none">
         <div>
-          Turn the screen, press and hold the{" "}
-          <span className="bg-neutral-900 border border-neutral-800 p-[1px] rounded">
+          Hold down the{" "}
+          <span className="bg-neutral-900 border border-neutral-800 p-[1px] text-[10px] rounded">
             ALT
           </span>{" "}
-          key.
+          key to rotate the screen.
         </div>
         <div>
-          Pan the screen, press and hold the{" "}
-          <span className="bg-neutral-900 border border-neutral-800 p-[1px] rounded">
+          Hold down the{" "}
+          <span className="bg-neutral-900 border border-neutral-800 p-[1px] text-[10px] rounded">
             CMD
           </span>{" "}
-          key.{" "}
+          key to scroll the screen.{" "}
         </div>
       </div>
       {activeModelId && (
