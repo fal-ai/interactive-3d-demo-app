@@ -89,6 +89,12 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.document.cookie = "fal-app=true; path=/; samesite=strict; secure;";
+    }
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between relative w-screen h-screen">
       <div className="toolbar p-1 px-2 text-sm space-x-2 inline-flex items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed z-50 right-40 top-4 -translate-x-1/2">
