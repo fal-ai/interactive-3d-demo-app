@@ -8,18 +8,23 @@ import {
   Sphere,
 } from "@react-three/drei";
 import { useEffect, useState } from "react";
-import ModelGLB, { ModelData } from "./components/Model";
+import clsx from "clsx";
+import Image from "next/image";
 import { nanoid } from "nanoid";
+
+import ModelGLB, { ModelData } from "./components/Model";
 import TransformWrapper from "./components/TransformWrapper";
 import Icon from "./components/Icon";
 import CreateObjectWithAiDialog from "./components/CreateObjectWithAiDialog";
-import Image from "next/image";
 
 export default function Home() {
   const [models, setModels] = useState<ModelData[]>([]);
   const [enableRotate, setEnableRotate] = useState(false);
   const [activeModelId, setActiveModelId] = useState<string | null>(null);
   const [showGrid, setShowGrid] = useState(true);
+  const [mode, setMode] = useState<"translate" | "rotate" | "scale">(
+    "translate"
+  );
 
   const handleInsert = async (modelURL: string) => {
     setModels([
@@ -95,14 +100,38 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (activeModelId === null) return;
+
+      if (event.key === "Escape") {
+        setActiveModelId(null);
+      }
+
+      if (event.code === "KeyM") {
+        setMode("translate");
+      } else if (event.code === "KeyR") {
+        setMode("rotate");
+      } else if (event.code === "KeyS") {
+        setMode("scale");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setActiveModelId, activeModelId]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between relative w-screen h-screen">
-      <div className="toolbar p-1 px-2 text-sm space-x-2 inline-flex items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed z-50 right-40 top-4 -translate-x-1/2">
+      <header className="p-3 text-sm space-x-2 flex w-full items-start justify-end bg-gradient-to-b via-black from-black h-32 to-transparent fixed z-50 left-0 top-0">
         <span className="text-xs font-mono text-neutral-300">powered by</span>
         <a target="_blank" href="https://fal.ai">
           <Image src="/fal-ai.svg" alt="fal.ai" width={50} height={20} />
         </a>
-      </div>
+      </header>
       <div
         id="canvas-wrapper"
         className="w-screen h-screen absolute top-0 left-0"
@@ -135,6 +164,7 @@ export default function Home() {
               setActiveModelId={setActiveModelId}
               key={model.id}
               model={model}
+              mode={mode}
               setModels={setModels}
             >
               {model.type === "glb" && model.url ? (
@@ -167,25 +197,84 @@ export default function Home() {
           />
         </Canvas>
       </div>
-      <div className="toolbar p-1 space-y-2 flex flex-col items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed left-10 top-1/3 translate-y-1/2">
-        <button
-          className="flex items-center justify-center"
-          onClick={handleRect}
-        >
-          <Icon icon="box" size={20} />
-        </button>
-        <button
-          className="flex items-center justify-center"
-          onClick={handleSphere}
-        >
-          <Icon icon="circle" size={16} />
-        </button>
-        <CreateObjectWithAiDialog onInsert={handleInsert}>
-          <button className="flex items-center justify-center">
-            <Icon icon="sparkle" size={16} className="text-lime-400" />
+      <div className="toolbar p-1 divide-y divide-neutral-500 space-y-2 flex flex-col items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed left-10 top-1/3 translate-y-1/2">
+        <div className="flex flex-col space-y-2">
+          <button
+            className="flex items-center justify-center w-5 h-5 rounded-full"
+            onClick={handleRect}
+          >
+            <Icon icon="box" size={20} />
           </button>
-        </CreateObjectWithAiDialog>
+          <button
+            className="flex items-center justify-center w-5 h-5 rounded-full"
+            onClick={handleSphere}
+          >
+            <Icon icon="circle" size={16} />
+          </button>
+          <CreateObjectWithAiDialog onInsert={handleInsert}>
+            <button className="flex items-center justify-center w-5 h-5 rounded-full">
+              <Icon icon="sparkle" size={16} />
+            </button>
+          </CreateObjectWithAiDialog>
+        </div>
+
+        <div className="pt-2">
+          <button
+            className={clsx(
+              "flex items-center justify-center w-5 h-5 rounded-full",
+              {
+                "text-neutral-600": !showGrid,
+              }
+            )}
+            onClick={() => setShowGrid((showGrid) => !showGrid)}
+          >
+            <Icon icon="grid" size={14} />
+          </button>
+        </div>
       </div>
+      {activeModelId && (
+        <div className="toolbar p-1 divide-x divide-neutral-600 space-x-2 flex items-center justify-center w-auto rounded-full bg-neutral-900 border border-neutral-700 fixed bottom-10 left-1/2 -translate-x-1/2">
+          <div className="flex space-x-2">
+            <button
+              className={clsx(
+                "flex items-center justify-center h-6 w-6 rounded-full",
+                {
+                  "bg-lime-400 text-black": mode === "translate",
+                }
+              )}
+              onClick={() => setMode("translate")}
+            >
+              <Icon icon="move" size={20} />
+            </button>
+            <button
+              className={clsx(
+                "flex items-center justify-center h-6 w-6 rounded-full",
+                {
+                  "bg-lime-400 text-black": mode === "rotate",
+                }
+              )}
+              onClick={() => setMode("rotate")}
+            >
+              <Icon icon="rotate" size={16} />
+            </button>
+            <button
+              className={clsx(
+                "flex items-center justify-center h-6 w-6 rounded-full",
+                {
+                  "bg-lime-400 text-black": mode === "scale",
+                }
+              )}
+              onClick={() => setMode("scale")}
+            >
+              <Icon icon="scale" size={18} />
+            </button>
+          </div>
+
+          <div className="px-2">
+            <span className="text-neutral-500 text-xs">ESC</span>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

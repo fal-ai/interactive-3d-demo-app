@@ -187,6 +187,7 @@ const CreateObjectWithAiDialog = ({
             <textarea
               className="resize-none text-[13px] bg-neutral-800 text-neutral-200 border border-neutral-700 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] p-2 leading-none outline-none placeholder:text-neutral-600"
               id="prompt"
+              onKeyDown={(e) => e.stopPropagation()}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="A 3d model of a red car, volumetric, good lighting, professional photo shoot, studio"
             />
@@ -203,17 +204,19 @@ const CreateObjectWithAiDialog = ({
               </div>
             )}
 
-            {modelURL && (
-              <div className="w-1/2 rounded-1 bg-black aspect-square">
-                <Canvas>
-                  <OrbitControls />
-                  <ambientLight intensity={2} />
-                  <directionalLight position={[0, 10, 0]} intensity={2.5} />
-                  <directionalLight position={[0, 0, 10]} intensity={2.5} />
-                  <directionalLight position={[10, 0, 0]} intensity={2.5} />
-                  <directionalLight position={[0, -10, 0]} intensity={2.5} />
-                  <ModelGLB url={modelURL as string} />
-                </Canvas>
+            {image && (
+              <div className="w-1/2 rounded-[4px] bg-black aspect-square">
+                {modelURL && (
+                  <Canvas>
+                    <OrbitControls maxDistance={1} />
+                    <ambientLight intensity={2} />
+                    <directionalLight position={[0, 10, 0]} intensity={2.5} />
+                    <directionalLight position={[0, 0, 10]} intensity={2.5} />
+                    <directionalLight position={[10, 0, 0]} intensity={2.5} />
+                    <directionalLight position={[0, -10, 0]} intensity={2.5} />
+                    <ModelGLB url={modelURL as string} />
+                  </Canvas>
+                )}
               </div>
             )}
           </div>

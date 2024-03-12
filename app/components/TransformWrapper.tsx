@@ -1,6 +1,6 @@
 import { TransformControls } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 export interface ModelData {
   id: string;
@@ -17,12 +17,14 @@ const TransformWrapper = ({
   setModels,
   children,
   model,
+  mode,
   activeModelId,
   setActiveModelId,
 }: {
   activeModelId: string | null;
   setActiveModelId: Dispatch<SetStateAction<string | null>>;
   model: ModelData;
+  mode: "translate" | "rotate" | "scale";
   children: React.ReactNode;
   setModels: Dispatch<SetStateAction<ModelData[]>>;
 }) => {
@@ -31,28 +33,10 @@ const TransformWrapper = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setActiveModelId(null);
-      }
-
       if (event.key === "Backspace") {
         setModels((models) =>
           models.filter((model) => model.id !== activeModelId)
         );
-      }
-
-      if (!transformControlRef.current) return;
-
-      switch (event.code) {
-        case "KeyM":
-          transformControlRef.current.setMode("translate");
-          break;
-        case "KeyR":
-          transformControlRef.current.setMode("rotate");
-          break;
-        case "KeyS":
-          transformControlRef.current.setMode("scale");
-          break;
       }
     };
 
@@ -62,6 +46,12 @@ const TransformWrapper = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [setActiveModelId, activeModelId]);
+
+  useEffect(() => {
+    if (transformControlRef.current) {
+      transformControlRef.current.setMode(mode);
+    }
+  }, [mode]);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
