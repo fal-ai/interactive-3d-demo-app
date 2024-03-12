@@ -36,7 +36,7 @@ export default function Home() {
         transform: {
           position: [0, 0, 0],
           rotation: [0, 0, 0],
-          scale: [10, 10, 10],
+          scale: [1, 1, 1],
         },
       },
     ]);
