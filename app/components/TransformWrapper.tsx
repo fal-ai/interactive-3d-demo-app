@@ -34,6 +34,7 @@ const TransformWrapper = ({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Backspace") {
+        setActiveModelId(null);
         setModels((models) =>
           models.filter((model) => model.id !== activeModelId)
         );

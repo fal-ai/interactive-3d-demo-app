@@ -109,6 +109,10 @@ export default function Home() {
         setMode("translate");
       }
 
+      if (event.code === "Backspace") {
+        setMode("translate");
+      }
+
       if (event.code === "KeyM") {
         setMode("translate");
       } else if (event.code === "KeyR") {
