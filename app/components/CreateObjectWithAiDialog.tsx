@@ -221,7 +221,7 @@ const CreateObjectWithAiDialog = ({
             )}
           </div>
 
-          <div className="mt-[25px] flex justify-between items-center space-x-2">
+          <div className="mt-[25px] text-neutral-200 flex justify-between items-center space-x-2">
             <div className="flex items-center relative">
               {status && (
                 <motion.div

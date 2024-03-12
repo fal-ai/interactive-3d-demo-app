@@ -130,7 +130,7 @@ export default function Home() {
   }, [setActiveModelId, activeModelId]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between relative w-screen h-screen">
+    <main className="flex text-neutral-200 bg-black min-h-screen flex-col items-center justify-between relative w-screen h-screen">
       <header className="p-3 text-sm space-x-2 flex w-full items-start justify-end bg-gradient-to-b via-black from-black h-32 to-transparent fixed z-50 left-0 top-0">
         <span className="text-xs font-mono text-neutral-300">powered by</span>
         <a target="_blank" href="https://fal.ai">
@@ -141,7 +141,7 @@ export default function Home() {
         id="canvas-wrapper"
         className="w-screen h-screen absolute top-0 left-0"
       >
-        <Canvas>
+        <Canvas color="#000000">
           <PerspectiveCamera makeDefault position={[0, 5, 5]} />
           <OrbitControls enableRotate={enableRotate} />
 
@@ -202,7 +202,7 @@ export default function Home() {
           />
         </Canvas>
       </div>
-      <div className="toolbar p-1 divide-y divide-neutral-500 space-y-2 flex flex-col items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed left-10 top-1/3 translate-y-1/2">
+      <div className="toolbar text-neutral-200 p-1 divide-y divide-neutral-500 space-y-2 flex flex-col items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed left-10 top-1/3 translate-y-1/2">
         <div className="flex flex-col space-y-2">
           <button
             className="flex items-center justify-center w-5 h-5 rounded-full"
