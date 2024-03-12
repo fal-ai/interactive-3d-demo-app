@@ -141,11 +141,17 @@ export default function Home() {
                 <ModelGLB url={model.url} />
               ) : model.type === "rect" ? (
                 <Box args={[1, 1, 1]}>
-                  <meshStandardMaterial attach="material" color="lightgreen" />
+                  <meshStandardMaterial
+                    attach="material"
+                    color={model.id === activeModelId ? "#ff6080" : "white"}
+                  />
                 </Box>
               ) : (
                 <Sphere args={[1, 100, 100]}>
-                  <meshStandardMaterial attach="material" color="lightgreen" />
+                  <meshStandardMaterial
+                    attach="material"
+                    color={model.id === activeModelId ? "#ff6080" : "white"}
+                  />
                 </Sphere>
               )}
             </TransformWrapper>
