@@ -112,7 +112,7 @@ export default function Home() {
           <OrbitControls enableRotate={enableRotate} />
 
           <directionalLight intensity={2.5} position={[0, 10, 0]} />
-          <directionalLight intensity={2.5} position={[0, 0, 10]} />
+          <directionalLight intensity={1.5} position={[0, 0, 10]} />
           <pointLight position={[100, 100, 100]} intensity={0.8} />
           <hemisphereLight
             color="#ffffff"
