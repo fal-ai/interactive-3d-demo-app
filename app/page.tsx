@@ -232,6 +232,23 @@ export default function Home() {
           </button>
         </div>
       </div>
+
+      <div className="fixed bottom-10 left-10 flex flex-col space-y-2 text-xs text-neutral-600/70 pointer-events-none">
+        <div>
+          Turn the screen, press and hold the{" "}
+          <span className="bg-neutral-900 border border-neutral-800 p-[1px] rounded">
+            ALT
+          </span>{" "}
+          key.
+        </div>
+        <div>
+          Pan the screen, press and hold the{" "}
+          <span className="bg-neutral-900 border border-neutral-800 p-[1px] rounded">
+            CMD
+          </span>{" "}
+          key.{" "}
+        </div>
+      </div>
       {activeModelId && (
         <div className="toolbar p-1 divide-x divide-neutral-600 space-x-2 flex items-center justify-center w-auto rounded-full bg-neutral-900 border border-neutral-700 fixed bottom-10 left-1/2 -translate-x-1/2">
           <div className="flex space-x-2">
