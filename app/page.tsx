@@ -106,6 +106,7 @@ export default function Home() {
 
       if (event.key === "Escape") {
         setActiveModelId(null);
+        setMode("translate");
       }
 
       if (event.code === "KeyM") {
