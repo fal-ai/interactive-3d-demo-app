@@ -43,6 +43,54 @@
       "properties": {
         "name": "sparkle"
       }
+    },
+    {
+      "id": 60694,
+      "iconSetName": "fluent-ui-system-icons-fill",
+      "name": "spinner-ios",
+      "icon": {
+        "paths": [
+          "M512 179.2A332.8 332.8 0 0 0 179.2 512 38.4 38.4 0 0 1 102.4 512a409.6 409.6 0 1 1 409.6 409.6 38.4 38.4 0 0 1 0-76.8 332.8 332.8 0 1 0 0-665.6Z"
+        ],
+        "attrs": [],
+        "width": 1024
+      },
+      "properties": {
+        "name": "spinner",
+        "iconSetName": "fluent-ui-system-icons-fill"
+      }
+    },
+    {
+      "id": 49256,
+      "iconSetName": "bootstrap-icons",
+      "name": "check2",
+      "icon": {
+        "paths": [
+          "M886.7 233.3a32 32 0 0 1 0 45.4l-448 448a32 32 0 0 1-45.4 0l-224-224a32 32 0 1 1 45.4-45.4L416 658.8l425.3-425.5a32 32 0 0 1 45.4 0z"
+        ],
+        "attrs": [],
+        "width": 1024
+      },
+      "properties": {
+        "name": "check",
+        "iconSetName": "bootstrap-icons"
+      }
+    },
+    {
+      "id": 52197,
+      "iconSetName": "carbon",
+      "name": "close",
+      "icon": {
+        "paths": [
+          "M768 300.8L723.2 256 512 467.2 300.8 256 256 300.8l211.2 211.2L256 723.2 300.8 768l211.2-211.2 211.2 211.2 44.8-44.8-211.2-211.2L768 300.8z"
+        ],
+        "attrs": [],
+        "width": 1024
+      },
+      "properties": {
+        "name": "close",
+        "iconSetName": "carbon"
+      }
     }
   ]
 }

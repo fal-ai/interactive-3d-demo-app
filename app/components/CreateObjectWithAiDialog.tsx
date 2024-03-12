@@ -1,10 +1,21 @@
 import React, { ReactNode, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { imageTo3D, textToImage } from "../util/workflow";
+import * as fal from "@fal-ai/serverless-client";
+
+fal.config({ proxyUrl: "/api/proxy" });
+
+import { putBackgroundToImage } from "../util/putBackgroundToImage";
 import { Canvas } from "@react-three/fiber";
 import ModelGLB from "./Model";
 import { OrbitControls } from "@react-three/drei";
+import Icon from "./Icon";
+
+interface LogData {
+  type: "loading" | "success" | "error";
+  message: string;
+  meta?: Record<string, any>;
+}
 
 const CreateObjectWithAiDialog = ({
   children,
@@ -16,27 +27,148 @@ const CreateObjectWithAiDialog = ({
   const [prompt, setPrompt] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
   const [modelURL, setModelURL] = useState<string | null>(null);
+  const [status, setStatus] = useState<LogData | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleGenerateImage = async () => {
-    const image = await textToImage(prompt);
-    if (image) {
-      setImage(image);
+  const handleImageGenerate = async () => {
+    const generatedImage = await fal.subscribe("fal-ai/fast-sdxl", {
+      input: {
+        prompt: `A 3d model of ${prompt}, volumetric, good lighting, professional photo shoot, studio`,
+      },
+    });
+
+    // @ts-expect-error
+    if (!generatedImage || generatedImage.images.length === 0) {
+      setStatus({
+        type: "error",
+        message: "Failed to generate image",
+      });
+      setLoading(false);
+      return null;
     }
+
+    // @ts-expect-error
+    const image = generatedImage.images[0];
+
+    setImage(image.url);
+
+    setStatus({
+      type: "success",
+      message: "Image generated",
+    });
 
     return image;
   };
 
-  const handleGenerateModel = async (image: string) => {
-    if (!image) return;
-    const url = await imageTo3D(image as string);
+  const removeBackground = async (image_url: string) => {
+    const removedBgImage = await fal.subscribe("fal-ai/imageutils/rembg", {
+      input: { image_url },
+    });
 
-    setModelURL(url as any);
+    // @ts-expect-error
+    if (!removedBgImage || !removedBgImage.image) {
+      setStatus({
+        type: "error",
+        message: "Failed to remove background",
+      });
+      setLoading(false);
+      return null;
+    }
+
+    // @ts-expect-error
+    const imageWithoutBackground = removedBgImage.image;
+
+    setStatus({
+      type: "success",
+      message: "Background removed",
+    });
+
+    setImage(imageWithoutBackground.url);
+
+    return imageWithoutBackground.url;
+  };
+
+  const putBackground = async (image_url: string) => {
+    const imageWithBackgroundBlob = await putBackgroundToImage(image_url);
+
+    if (!imageWithBackgroundBlob) {
+      setStatus({
+        type: "error",
+        message: "Failed to add background",
+      });
+      setLoading(false);
+      return null;
+    }
+
+    const imageWithBackground = URL.createObjectURL(imageWithBackgroundBlob);
+    setImage(imageWithBackground);
+
+    setStatus({
+      type: "success",
+      message: "Flat Background added",
+    });
+
+    return imageWithBackgroundBlob;
+  };
+
+  const handleGenerateModel = async (image: Blob) => {
+    const generatedModel = await fal.subscribe("fal-ai/triposr", {
+      input: { image_url: image },
+      logs: true,
+    });
+
+    // @ts-expect-error
+    if (!generatedModel || !generatedModel.model_mesh) {
+      setStatus({
+        type: "error",
+        message: "Failed to generate 3D model",
+      });
+      setLoading(false);
+      return null;
+    }
+
+    // @ts-expect-error
+    setModelURL(generatedModel.model_mesh.url);
+
+    setStatus({
+      type: "success",
+      message: "3D Model generated",
+    });
   };
 
   const handleGenerate = async () => {
-    const image = await handleGenerateImage();
-    if (!image) return null;
-    await handleGenerateModel(image);
+    setLoading(true);
+
+    setStatus({
+      type: "loading",
+      message: "Image generating...",
+    });
+
+    const image = await handleImageGenerate();
+
+    setStatus({
+      type: "loading",
+      message: "Background removing...",
+    });
+
+    const imageWithoutBackground = await removeBackground(image.url);
+
+    setStatus({
+      type: "loading",
+      message: "Flat background adding...",
+    });
+
+    const imageWithBackgroundBlob = await putBackground(imageWithoutBackground);
+
+    setStatus({
+      type: "loading",
+      message: "3D Model generating...",
+    });
+
+    setTimeout(async () => {
+      await handleGenerateModel(imageWithBackgroundBlob as Blob);
+      setLoading(false);
+    }, 200);
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -44,6 +176,8 @@ const CreateObjectWithAiDialog = ({
       setPrompt("");
       setImage(null);
       setModelURL(null);
+      setStatus(null);
+      setLoading(false);
     }
   };
 
@@ -78,7 +212,7 @@ const CreateObjectWithAiDialog = ({
                 <img
                   src={image}
                   alt="Generated Image"
-                  className="w-[200px] h-[200px] rounded-[4px]"
+                  className="rounded-[4px]"
                 />
               </div>
             )}
@@ -97,38 +231,71 @@ const CreateObjectWithAiDialog = ({
               </div>
             )}
           </div>
-          <div className="mt-[25px] flex justify-end space-x-2">
-            {!modelURL && (
-              <button
-                onClick={handleGenerate}
-                className="bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
-              >
-                Generate
-              </button>
-            )}
 
-            {modelURL && (
-              <>
+          <div className="mt-[25px] flex justify-between items-center space-x-2">
+            <div className="flex flex-col divide-y divide-neutral-600">
+              {status && (
+                <div className="flex justify-between text-xs">
+                  <Icon
+                    icon={
+                      status.type === "loading"
+                        ? "spinner"
+                        : status.type === "success"
+                        ? "check"
+                        : "close"
+                    }
+                    className={
+                      "mr-1 " +
+                      (status.type === "loading"
+                        ? "animate-spin text-neutral-500"
+                        : status.type === "success"
+                        ? " text-lime-500"
+                        : "text-red-400")
+                    }
+                    size={16}
+                  />
+                  <div className="text-neutral-200">{status.message}</div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {!modelURL && (
                 <button
+                  disabled={loading}
                   onClick={handleGenerate}
                   className="bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                 >
-                  Regenerate
+                  Generate
                 </button>
-                <Dialog.Close asChild>
+              )}
+
+              {modelURL && (
+                <>
                   <button
-                    onClick={handleInsert}
-                    className="bg-lime-600 border-t border-lime-500 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                    disabled={loading}
+                    onClick={handleGenerate}
+                    className="disabled:opacity-55 disabled:cursor-not-allowed  bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                   >
-                    Insert
+                    Regenerate
                   </button>
-                </Dialog.Close>
-              </>
-            )}
+                  <Dialog.Close asChild>
+                    <button
+                      disabled={loading}
+                      onClick={handleInsert}
+                      className="disabled:opacity-55 disabled:cursor-not-allowed  bg-lime-600 border-t border-lime-500 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                    >
+                      Insert
+                    </button>
+                  </Dialog.Close>
+                </>
+              )}
+            </div>
           </div>
           <Dialog.Close asChild>
             <button
-              className="text-neutral-100 hover:bg-neutral-700  absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
+              disabled={loading}
+              className="disabled:opacity-55 disabled:cursor-not-allowed text-neutral-100 hover:bg-neutral-700  absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
               aria-label="Close"
             >
               <Cross2Icon />
