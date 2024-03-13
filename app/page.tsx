@@ -18,6 +18,7 @@ import TransformWrapper from "./components/TransformWrapper";
 import Icon from "./components/Icon";
 import CreateObjectWithAiDialog from "./components/CreateObjectWithAiDialog";
 import PreviewDialog from "./components/PreviewDialog";
+import Guide from "./components/Guide";
 
 export default function Home() {
   const [models, setModels] = useState<ModelData[]>([
@@ -281,22 +282,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="fixed select-none bottom-10 left-10 flex flex-col space-y-2 text-xs text-neutral-600/70 pointer-events-none">
-        <div>
-          Hold down the{" "}
-          <span className="bg-neutral-900 border border-neutral-800 p-[1px] text-[10px] rounded">
-            ALT
-          </span>{" "}
-          key to rotate the screen.
-        </div>
-        <div>
-          Hold down the{" "}
-          <span className="bg-neutral-900 border border-neutral-800 p-[1px] text-[10px] rounded">
-            CMD
-          </span>{" "}
-          key to scroll the screen.{" "}
-        </div>
-      </div>
+      <Guide activeModelId={activeModelId} />
+
       {activeModelId && (
         <div className="toolbar select-none p-1 divide-x divide-neutral-600 space-x-2 flex items-center justify-center w-auto rounded-full bg-neutral-900 border border-neutral-700 fixed bottom-10 left-1/2 -translate-x-1/2">
           <div className="flex space-x-2">
