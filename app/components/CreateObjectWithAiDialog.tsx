@@ -184,6 +184,14 @@ const CreateObjectWithAiDialog = ({
     onInsert(modelURL as string);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleGenerate();
+    }
+  };
+
   return (
     <Dialog.Root onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
@@ -200,7 +208,7 @@ const CreateObjectWithAiDialog = ({
             <textarea
               className="resize-none text-[13px] bg-neutral-800 text-neutral-200 border border-neutral-700 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] p-2 leading-none outline-none placeholder:text-neutral-600"
               id="prompt"
-              onKeyDown={(e) => e.stopPropagation()}
+              onKeyDown={handleKeyDown}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="A 3d model of a red car, volumetric, good lighting, professional photo shoot, studio"
             />
