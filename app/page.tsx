@@ -6,6 +6,7 @@ import {
   OrbitControls,
   PerspectiveCamera,
   Sphere,
+  Text3D,
 } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
@@ -19,7 +20,17 @@ import CreateObjectWithAiDialog from "./components/CreateObjectWithAiDialog";
 import PreviewDialog from "./components/PreviewDialog";
 
 export default function Home() {
-  const [models, setModels] = useState<ModelData[]>([]);
+  const [models, setModels] = useState<ModelData[]>([
+    {
+      id: nanoid(),
+      type: "intro",
+      transform: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1],
+      },
+    },
+  ]);
   const [enableRotate, setEnableRotate] = useState(false);
   const [activeModelId, setActiveModelId] = useState<string | null>(null);
   const [showGrid, setShowGrid] = useState(true);
@@ -150,7 +161,7 @@ export default function Home() {
         className="w-screen h-screen absolute top-0 left-0"
       >
         <Canvas color="#000000">
-          <PerspectiveCamera makeDefault position={[0, 5, 5]} />
+          <PerspectiveCamera makeDefault position={[0, 15, 15]} />
           <OrbitControls enableRotate={enableRotate} />
 
           <directionalLight intensity={2.5} position={[0, 10, 0]} />
@@ -180,7 +191,22 @@ export default function Home() {
               mode={mode}
               setModels={setModels}
             >
-              {model.type === "glb" && model.url ? (
+              {model.type === "intro" ? (
+                <Text3D
+                  key={model.type}
+                  curveSegments={32}
+                  bevelEnabled
+                  bevelSize={0.04}
+                  bevelThickness={0.5}
+                  size={3}
+                  height={0.5}
+                  rotation={[-Math.PI / 2, 0, 0]}
+                  font="/Alkhemikal_Medium.json"
+                >
+                  fal
+                  <meshNormalMaterial />
+                </Text3D>
+              ) : model.type === "glb" && model.url ? (
                 <ModelGLB url={model.url} />
               ) : model.type === "rect" ? (
                 <Box args={[1, 1, 1]}>

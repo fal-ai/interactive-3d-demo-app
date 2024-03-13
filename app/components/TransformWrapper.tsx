@@ -1,17 +1,7 @@
 import { TransformControls } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-
-export interface ModelData {
-  id: string;
-  type: "glb" | "rect" | "circle";
-  url?: string;
-  transform: {
-    position: [number, number, number];
-    rotation: [number, number, number];
-    scale: [number, number, number];
-  };
-}
+import { ModelData } from "./Model";
 
 const TransformWrapper = ({
   setModels,

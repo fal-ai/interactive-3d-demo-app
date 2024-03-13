@@ -4,7 +4,7 @@ import { useRef } from "react";
 
 export interface ModelData {
   id: string;
-  type: "glb" | "rect" | "circle";
+  type: "glb" | "rect" | "circle" | "intro";
   url?: string;
   transform: {
     position: [number, number, number];
