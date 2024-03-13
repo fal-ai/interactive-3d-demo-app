@@ -236,7 +236,7 @@ export default function Home() {
           />
         </Canvas>
       </div>
-      <div className="toolbar text-neutral-200 p-1 divide-y divide-neutral-500 space-y-2 flex flex-col items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed left-10 top-1/3 translate-y-1/2">
+      <div className="toolbar select-none text-neutral-200 p-1 divide-y divide-neutral-500 space-y-2 flex flex-col items-center justify-center h-auto rounded-full bg-neutral-900 border border-neutral-700 fixed left-10 top-1/3 translate-y-1/2">
         <div className="flex flex-col space-y-2">
           <button
             className="flex items-center justify-center w-5 h-5 rounded-full"
@@ -272,7 +272,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="fixed bottom-10 left-10 flex flex-col space-y-2 text-xs text-neutral-600/70 pointer-events-none">
+      <div className="fixed select-none bottom-10 left-10 flex flex-col space-y-2 text-xs text-neutral-600/70 pointer-events-none">
         <div>
           Hold down the{" "}
           <span className="bg-neutral-900 border border-neutral-800 p-[1px] text-[10px] rounded">
@@ -289,7 +289,7 @@ export default function Home() {
         </div>
       </div>
       {activeModelId && (
-        <div className="toolbar p-1 divide-x divide-neutral-600 space-x-2 flex items-center justify-center w-auto rounded-full bg-neutral-900 border border-neutral-700 fixed bottom-10 left-1/2 -translate-x-1/2">
+        <div className="toolbar select-none p-1 divide-x divide-neutral-600 space-x-2 flex items-center justify-center w-auto rounded-full bg-neutral-900 border border-neutral-700 fixed bottom-10 left-1/2 -translate-x-1/2">
           <div className="flex space-x-2">
             <button
               className={clsx(
