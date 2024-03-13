@@ -3,10 +3,10 @@ import React, { ReactNode, useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { USDZExporter } from "three/addons/exporters/USDZExporter.js";
-import "@google/model-viewer";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three/examples/jsm/Addons.js";
-import ModelViewer from "./ModelViewer";
+import dynamic from "next/dynamic";
+const ModelViewer = dynamic(() => import("./ModelViewer"), { ssr: false });
 
 const PreviewDialog = ({
   children,

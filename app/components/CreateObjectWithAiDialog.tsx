@@ -8,7 +8,8 @@ fal.config({ proxyUrl: "/api/proxy" });
 
 import { putBackgroundToImage } from "../util/putBackgroundToImage";
 import Icon from "./Icon";
-import ModelViewer from "./ModelViewer";
+import dynamic from "next/dynamic";
+const ModelViewer = dynamic(() => import("./ModelViewer"), { ssr: false });
 
 interface LogData {
   type: "loading" | "success" | "error";
