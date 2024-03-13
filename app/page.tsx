@@ -16,6 +16,7 @@ import ModelGLB, { ModelData } from "./components/Model";
 import TransformWrapper from "./components/TransformWrapper";
 import Icon from "./components/Icon";
 import CreateObjectWithAiDialog from "./components/CreateObjectWithAiDialog";
+import PreviewDialog from "./components/PreviewDialog";
 
 export default function Home() {
   const [models, setModels] = useState<ModelData[]>([]);
@@ -133,6 +134,8 @@ export default function Home() {
     setModels((models) => models.filter((model) => model.id !== activeModelId));
     setActiveModelId(null);
   };
+
+  const activeModel = models.find((model) => model.id === activeModelId);
 
   return (
     <main className="flex text-neutral-200 bg-black min-h-screen flex-col items-center justify-between relative w-screen h-screen">
@@ -305,8 +308,15 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="px-2">
-            <span className="text-neutral-500 text-xs">ESC</span>
+          <div className="px-2 flex items-center space-x-2">
+            {activeModel?.url && (
+              <PreviewDialog modelURL={activeModel?.url}>
+                <button className="flex items-center justify-center w-5 h-5 rounded-full">
+                  <Icon icon="arrow-download" size={16} />
+                </button>
+              </PreviewDialog>
+            )}
+            <span className="text-neutral-500 text-[10px] ml-6">ESC</span>
           </div>
         </div>
       )}

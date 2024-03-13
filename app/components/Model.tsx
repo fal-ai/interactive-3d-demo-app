@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { ThreeElements } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export interface ModelData {
   id: string;
@@ -26,15 +26,13 @@ const ModelGLB = ({ url }: { url: string }) => {
   });
 
   return (
-    <>
-      <primitive
-        ref={meshRef}
-        object={model.scene}
-        rotation={[Math.PI / 2, -Math.PI, Math.PI / 2]}
-      >
-        <meshBasicMaterial attach="material" color={0xffffff} />
-      </primitive>
-    </>
+    <primitive
+      ref={meshRef}
+      object={model.scene}
+      rotation={[Math.PI / 2, -Math.PI, Math.PI / 2]}
+    >
+      <meshBasicMaterial attach="material" color={0xffffff} />
+    </primitive>
   );
 };
 

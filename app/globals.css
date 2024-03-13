@@ -31,3 +31,7 @@ body {
     text-wrap: balance;
   }
 }
+
+model-viewer {
+  @apply w-full aspect-square;
+}

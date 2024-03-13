@@ -7,10 +7,8 @@ import { motion } from "framer-motion";
 fal.config({ proxyUrl: "/api/proxy" });
 
 import { putBackgroundToImage } from "../util/putBackgroundToImage";
-import { Canvas } from "@react-three/fiber";
-import ModelGLB from "./Model";
-import { OrbitControls } from "@react-three/drei";
 import Icon from "./Icon";
+import ModelViewer from "./ModelViewer";
 
 interface LogData {
   type: "loading" | "success" | "error";
@@ -34,7 +32,8 @@ const CreateObjectWithAiDialog = ({
   const handleImageGenerate = async () => {
     const generatedImage = await fal.subscribe("fal-ai/fast-sdxl", {
       input: {
-        prompt: `A 3d model of ${prompt}, volumetric, good lighting, professional photo shoot, studio`,
+        // prompt: `A 3d model of ${prompt}, volumetric, good lighting, professional photo shoot, studio`,
+        prompt,
       },
     });
 
@@ -221,15 +220,16 @@ const CreateObjectWithAiDialog = ({
               <div className="w-1/2 flex items-center justify-center rounded-[4px] bg-black aspect-square">
                 {!modelURL && <span className="text-xl text-white/30">?</span>}
                 {modelURL && (
-                  <Canvas>
-                    <OrbitControls maxDistance={1} />
-                    <ambientLight intensity={2} />
-                    <directionalLight position={[0, 10, 0]} intensity={2.5} />
-                    <directionalLight position={[0, 0, 10]} intensity={2.5} />
-                    <directionalLight position={[10, 0, 0]} intensity={2.5} />
-                    <directionalLight position={[0, -10, 0]} intensity={2.5} />
-                    <ModelGLB url={modelURL as string} />
-                  </Canvas>
+                  <ModelViewer modelURL={modelURL as string} />
+                  // <Canvas>
+                  //   <OrbitControls maxDistance={1} />
+                  //   <ambientLight intensity={2} />
+                  //   <directionalLight position={[0, 10, 0]} intensity={2.5} />
+                  //   <directionalLight position={[0, 0, 10]} intensity={2.5} />
+                  //   <directionalLight position={[10, 0, 0]} intensity={2.5} />
+                  //   <directionalLight position={[0, -10, 0]} intensity={2.5} />
+                  //   <ModelGLB url={modelURL as string} />
+                  // </Canvas>
                 )}
               </div>
             )}
