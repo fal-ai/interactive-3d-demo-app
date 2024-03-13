@@ -18,7 +18,9 @@ import TransformWrapper from "./components/TransformWrapper";
 import Icon from "./components/Icon";
 import CreateObjectWithAiDialog from "./components/CreateObjectWithAiDialog";
 import PreviewDialog from "./components/PreviewDialog";
-import Guide from "./components/Guide";
+import dynamic from "next/dynamic";
+
+const Guide = dynamic(() => import("./components/Guide"), { ssr: false });
 
 export default function Home() {
   const [models, setModels] = useState<ModelData[]>([
