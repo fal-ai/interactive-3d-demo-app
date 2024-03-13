@@ -40,7 +40,7 @@ const ModelViewer = ({ modelURL }: { modelURL: string }) => {
       ios-src={usdzURL}
       ar
       ar-modes="webxr scene-viewer quick-look"
-      //   environment-image="path/to/your/environment.hdr"
+      orientation="90deg -90deg 180deg"
       camera-orbit="0deg 75deg 3m"
       camera-controls
     >
