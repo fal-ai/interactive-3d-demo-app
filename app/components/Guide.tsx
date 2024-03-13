@@ -26,7 +26,7 @@ const Guide = ({ activeModelId }: { activeModelId: string | null }) => {
             <span className="px-[2px] bg-neutral-900 border border-neutral-800 p-[1px] text-[10px] rounded">
               S
             </span>{" "}
-            key to rotate.
+            key to change size.
           </div>
           <div>
             Press the{" "}
