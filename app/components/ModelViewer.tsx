@@ -43,9 +43,7 @@ const ModelViewer = ({ modelURL }: { modelURL: string }) => {
       orientation="90deg -90deg 180deg"
       camera-orbit="0deg 75deg 3m"
       camera-controls
-    >
-      <button slot="ar-button">👋 Activate AR</button>
-    </model-viewer>
+    />
   );
 };
 
