@@ -150,11 +150,20 @@ export default function Home() {
 
   return (
     <main className="flex text-neutral-200 bg-black min-h-screen flex-col items-center justify-between relative w-screen h-screen">
-      <header className="p-3 text-sm space-x-2 flex w-full items-start justify-end bg-gradient-to-b via-black from-black h-32 to-transparent fixed z-50 left-0 top-0">
-        <span className="text-xs font-mono text-neutral-300">powered by</span>
-        <a target="_blank" href="https://fal.ai">
-          <Image src="/fal-ai.svg" alt="fal.ai" width={50} height={20} />
+      <header className="py-5 px-3 md:px-10 text-sm space-x-2 flex w-full items-start justify-between bg-gradient-to-b via-black from-black h-32 to-transparent fixed z-50 left-0 top-0">
+        <a
+          href="https://github.com/fal-ai/interactive-3d-demo-app"
+          className="flex items-center space-x-2"
+          target="_blank"
+        >
+          <Icon icon="github" size={20} />
         </a>
+        <div className="flex items-center">
+          <span className="text-xs font-mono text-neutral-300">powered by</span>
+          <a target="_blank" href="https://fal.ai">
+            <Image src="/fal-ai.svg" alt="fal.ai" width={50} height={20} />
+          </a>
+        </div>
       </header>
       <div
         id="canvas-wrapper"
