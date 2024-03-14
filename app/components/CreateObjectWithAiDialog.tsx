@@ -30,12 +30,11 @@ const CreateObjectWithAiDialog = ({
   const [status, setStatus] = useState<LogData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const isValidPrompt = prompt.trim().length > 2;
+
   const handleImageGenerate = async () => {
     const generatedImage = await fal.subscribe("fal-ai/fast-sdxl", {
-      input: {
-        // prompt: `A 3d model of ${prompt}, volumetric, good lighting, professional photo shoot, studio`,
-        prompt,
-      },
+      input: { prompt },
     });
 
     // @ts-expect-error
@@ -206,7 +205,8 @@ const CreateObjectWithAiDialog = ({
               Prompt
             </label>
             <textarea
-              className="resize-none text-[13px] bg-neutral-800 text-neutral-200 border border-neutral-700 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] p-2 leading-none outline-none placeholder:text-neutral-600"
+              disabled={loading}
+              className="disabled:text-neutral-400 resize-none text-[13px] bg-neutral-800 text-neutral-200 border border-neutral-700 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] p-2 leading-none outline-none placeholder:text-neutral-600"
               id="prompt"
               onKeyDown={handleKeyDown}
               onChange={(e) => setPrompt(e.target.value)}
@@ -228,18 +228,7 @@ const CreateObjectWithAiDialog = ({
             {image && (
               <div className="w-1/2 flex items-center justify-center rounded-[4px] bg-black aspect-square">
                 {!modelURL && <span className="text-xl text-white/30">?</span>}
-                {modelURL && (
-                  <ModelViewer modelURL={modelURL as string} />
-                  // <Canvas>
-                  //   <OrbitControls maxDistance={1} />
-                  //   <ambientLight intensity={2} />
-                  //   <directionalLight position={[0, 10, 0]} intensity={2.5} />
-                  //   <directionalLight position={[0, 0, 10]} intensity={2.5} />
-                  //   <directionalLight position={[10, 0, 0]} intensity={2.5} />
-                  //   <directionalLight position={[0, -10, 0]} intensity={2.5} />
-                  //   <ModelGLB url={modelURL as string} />
-                  // </Canvas>
-                )}
+                {modelURL && <ModelViewer modelURL={modelURL as string} />}
               </div>
             )}
           </div>
@@ -280,9 +269,9 @@ const CreateObjectWithAiDialog = ({
             <div className="flex items-center space-x-2">
               {!image && (
                 <button
-                  disabled={loading}
+                  disabled={!isValidPrompt || loading}
                   onClick={handleGenerate}
-                  className="bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                  className="disabled:opacity-55 disabled:cursor-not-allowed bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                 >
                   Generate
                 </button>
@@ -290,17 +279,17 @@ const CreateObjectWithAiDialog = ({
               {image && (
                 <>
                   <button
-                    disabled={loading}
+                    disabled={!isValidPrompt || loading}
                     onClick={handleGenerate}
-                    className="bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                    className="disabled:opacity-55 disabled:cursor-not-allowed bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                   >
                     Regenerate
                   </button>
                   {!modelURL ? (
                     <button
-                      disabled={loading}
+                      disabled={!isValidPrompt || loading}
                       onClick={handleGenerateModel}
-                      className="bg-lime-700 border-t border-lime-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                      className="disabled:opacity-55 disabled:cursor-not-allowed bg-lime-700 border-t border-lime-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                     >
                       Image to 3D
                     </button>
