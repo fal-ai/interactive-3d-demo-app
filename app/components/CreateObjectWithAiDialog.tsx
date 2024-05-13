@@ -9,6 +9,7 @@ fal.config({ proxyUrl: "/api/proxy" });
 import { putBackgroundToImage } from "../util/putBackgroundToImage";
 import Icon from "./Icon";
 import dynamic from "next/dynamic";
+import { Button } from "./ui/Button";
 const ModelViewer = dynamic(() => import("./ModelViewer"), { ssr: false });
 
 interface LogData {
@@ -268,40 +269,40 @@ const CreateObjectWithAiDialog = ({
 
             <div className="flex items-center space-x-2">
               {!image && (
-                <button
+                <Button
                   disabled={!isValidPrompt || loading}
                   onClick={handleGenerate}
-                  className="disabled:opacity-55 disabled:cursor-not-allowed bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                  className="disabled:opacity-55 disabled:cursor-not-allowed bg-indigo-700 border-t border-indigo-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                 >
                   Generate
-                </button>
+                </Button>
               )}
               {image && (
                 <>
-                  <button
+                  <Button
                     disabled={!isValidPrompt || loading}
                     onClick={handleGenerate}
-                    className="disabled:opacity-55 disabled:cursor-not-allowed bg-neutral-700 border-t border-neutral-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                    className="disabled:opacity-55 disabled:cursor-not-allowed bg-indigo-700 border-t border-indigo-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                   >
                     Regenerate
-                  </button>
+                  </Button>
                   {!modelURL ? (
-                    <button
+                    <Button
                       disabled={!isValidPrompt || loading}
                       onClick={handleGenerateModel}
                       className="disabled:opacity-55 disabled:cursor-not-allowed bg-lime-700 border-t border-lime-600 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                     >
                       Image to 3D
-                    </button>
+                    </Button>
                   ) : (
                     <Dialog.Close asChild>
-                      <button
+                      <Button
                         disabled={loading}
                         onClick={handleInsert}
                         className="disabled:opacity-55 disabled:cursor-not-allowed  bg-lime-600 border-t border-lime-500 inline-flex text-sm items-center justify-center rounded-[4px] px-3 py-2 leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                       >
                         Insert
-                      </button>
+                      </Button>
                     </Dialog.Close>
                   )}
                 </>
